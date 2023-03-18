@@ -1,4 +1,7 @@
-import pygame, requests, sys, os
+import pygame
+import requests
+import sys
+import os
 
 
 def load_map():
@@ -8,21 +11,20 @@ def load_map():
         print("Ошибка выполнения запроса:")
         print(map_request)
         sys.exit()
-    map_file = "map.png"
-    with open(map_file, "wb") as file:
+    map_file_name = "map.png"
+    with open(map_file_name, "wb") as file:
         file.write(response.content)
-    return map_file
+    return map_file_name
 
 
 if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     while True:
-        event = pygame.event.wait()
-        if event.type == pygame.QUIT:
-            break
         map_file = load_map()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                os.remove(map_file)
+                sys.exit()
         screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
-    pygame.quit()
-    os.remove(map_file)
